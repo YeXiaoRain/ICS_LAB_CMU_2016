@@ -17,6 +17,8 @@
 
 **Notes**: (a) Hardware only, (b) No dyn. storage alloc, (c) No dyn. linking, (d) No f.p.
 
+过程见我的每一个文件夹里的notes.md
+
 [Switch to default](https://github.com/YeXiaoRain/ICS_LAB_CMU_2016) : `git checkout default`
 
 相关
