@@ -47,7 +47,43 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    naive_rotate(dim, src, dst);
+  int i,j;
+  const int block = 16;
+  int srcder = 1 - dim*(block-1) ; //move from the end of one column to the start of next in src
+  int dstder = 1 - block - dim ;   //move from the end of one line   to the start of next in dst
+  // after move block*dim 
+  int srcblockder = 1 - srcder ;
+  int dstblockder = dim*dim + block;
+
+  dst += dim*(dim-1);
+  for(i = 0; i < dim; i += block ){
+    for(j = 0; j < dim; j++ ){
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst++ = *src; src += dim;
+      *dst = *src;// 
+      
+      src += srcder ;
+      dst += dstder ;
+    }
+    src += srcblockder;
+    dst += dstblockder;
+  }
 }
 
 /*********************************************************************
@@ -160,10 +196,71 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
  * smooth - Your current working version of smooth. 
  * IMPORTANT: This is the version you will be graded on
  */
+#define R(exp) exp.red 
+#define B(exp) exp.blue 
+#define G(exp) exp.green
 char smooth_descr[] = "smooth: Current working version";
 void smooth(int dim, pixel *src, pixel *dst) 
 {
-    naive_smooth(dim, src, dst);
+    //UpLeft
+    R(dst[0])           = (R(src[0])             +R(src[1])              +R(src[dim])         +R(src[dim +1])         ) >> 2;
+    G(dst[0])           = (G(src[0])             +G(src[1])              +G(src[dim])         +G(src[dim +1])         ) >> 2;
+    B(dst[0])           = (B(src[0])             +B(src[1])              +B(src[dim])         +B(src[dim +1])         ) >> 2;
+    //UpRight
+    R(dst[dim-1])       = (R(src[dim-2])         +R(src[dim-1])          +R(src[dim*2-2])     +R(src[dim*2-1])        ) >> 2;
+    G(dst[dim-1])       = (G(src[dim-2])         +G(src[dim-1])          +G(src[dim*2-2])     +G(src[dim*2-1])        ) >> 2;
+    B(dst[dim-1])       = (B(src[dim-2])         +B(src[dim-1])          +B(src[dim*2-2])     +B(src[dim*2-1])        ) >> 2;
+    //DownLeft
+    R(dst[dim*(dim-1)]) = (R(src[dim*(dim-2)])   +R(src[dim*(dim-2) +1]) +R(src[dim*(dim-1)]) +R(src[dim*(dim-1) +1]) ) >> 2;
+    G(dst[dim*(dim-1)]) = (G(src[dim*(dim-2)])   +G(src[dim*(dim-2) +1]) +G(src[dim*(dim-1)]) +G(src[dim*(dim-1) +1]) ) >> 2;
+    B(dst[dim*(dim-1)]) = (B(src[dim*(dim-2)])   +B(src[dim*(dim-2) +1]) +B(src[dim*(dim-1)]) +B(src[dim*(dim-1) +1]) ) >> 2;
+    //DownRight
+    R(dst[dim*dim-1])   = (R(src[dim*(dim-1)-2]) +R(src[dim*(dim-1)-1])  +R(src[dim*dim-2])   +R(src[dim*dim-1])      ) >> 2;
+    G(dst[dim*dim-1])   = (G(src[dim*(dim-1)-2]) +G(src[dim*(dim-1)-1])  +G(src[dim*dim-2])   +G(src[dim*dim-1])      ) >> 2;
+    B(dst[dim*dim-1])   = (B(src[dim*(dim-1)-2]) +B(src[dim*(dim-1)-1])  +B(src[dim*dim-2])   +B(src[dim*dim-1])      ) >> 2;
+
+    //UpEdge
+    for (int j =1; j < dim-1; j++){
+        R(dst[j]) =(R(src[j]) +R(src[j-1]) +R(src[j+1]) +R(src[j+dim]) +R(src[j+1+dim]) +R(src[j-1+dim])) / 6;
+        G(dst[j]) =(G(src[j]) +G(src[j-1]) +G(src[j+1]) +G(src[j+dim]) +G(src[j+1+dim]) +G(src[j-1+dim])) / 6;
+        B(dst[j]) =(B(src[j]) +B(src[j-1]) +B(src[j+1]) +B(src[j+dim]) +B(src[j+1+dim]) +B(src[j-1+dim])) / 6;
+    }
+    //DownEdge
+    for (int j =dim * (dim-1)+1; j < dim * dim-1; j++){
+        R(dst[j]) =(R(src[j]) +R(src[j-1]) +R(src[j+1]) +R(src[j-dim]) +R(src[j+1-dim]) +R(src[j-1-dim])) / 6;
+        G(dst[j]) =(G(src[j]) +G(src[j-1]) +G(src[j+1]) +G(src[j-dim]) +G(src[j+1-dim]) +G(src[j-1-dim])) / 6;
+        B(dst[j]) =(B(src[j]) +B(src[j-1]) +B(src[j+1]) +B(src[j-dim]) +B(src[j+1-dim]) +B(src[j-1-dim])) / 6;
+    }
+    //LeftEdge
+    for (int j =dim; j < dim * (dim-1); j+=dim){
+        R(dst[j]) =(R(src[j]) +R(src[j-dim]) +R(src[j+1]) +R(src[j+dim]) +R(src[j+1+dim]) +R(src[j-dim+1])) / 6;
+        G(dst[j]) =(G(src[j]) +G(src[j-dim]) +G(src[j+1]) +G(src[j+dim]) +G(src[j+1+dim]) +G(src[j-dim+1])) / 6;
+        B(dst[j]) =(B(src[j]) +B(src[j-dim]) +B(src[j+1]) +B(src[j+dim]) +B(src[j+1+dim]) +B(src[j-dim+1])) / 6;
+    }
+    //RightEdge
+    for (int j =dim+dim-1; j < dim * dim-1; j+=dim){
+        R(dst[j]) =(R(src[j]) +R(src[j-1]) +R(src[j-dim]) +R(src[j+dim]) +R(src[j-dim-1]) +R(src[j-1+dim])) / 6;
+        G(dst[j]) =(G(src[j]) +G(src[j-1]) +G(src[j-dim]) +G(src[j+dim]) +G(src[j-dim-1]) +G(src[j-1+dim])) / 6;
+        B(dst[j]) =(B(src[j]) +B(src[j-1]) +B(src[j-dim]) +B(src[j+dim]) +B(src[j-dim-1]) +B(src[j-1+dim])) / 6;
+    }
+
+    //Center
+    int tmpi = dim;
+    for (int i = 1; i < dim - 1; i++){
+        for (int j = 1; j < dim - 1; j++){
+            int tmp = tmpi + j;
+            R(dst[tmp]) = (R(src[tmp - dim - 1]) +R(src[tmp - dim]) +R(src[tmp - dim + 1]) +
+                           R(src[tmp - 1])       +R(src[tmp])       +R(src[tmp + 1])       +
+                           R(src[tmp + dim - 1]) +R(src[tmp + dim]) +R(src[tmp + dim + 1]) ) / 9;
+            G(dst[tmp]) = (G(src[tmp - dim - 1]) +G(src[tmp - dim]) +G(src[tmp - dim + 1]) +
+                           G(src[tmp - 1])       +G(src[tmp])       +G(src[tmp + 1])       +
+                           G(src[tmp + dim - 1]) +G(src[tmp + dim]) +G(src[tmp + dim + 1]) ) / 9;
+            B(dst[tmp]) = (B(src[tmp - dim - 1]) +B(src[tmp - dim]) +B(src[tmp - dim + 1]) +
+                           B(src[tmp - 1])       +B(src[tmp])       +B(src[tmp + 1])       +
+                           B(src[tmp + dim - 1]) +B(src[tmp + dim]) +B(src[tmp + dim + 1]) ) / 9;
+        }
+        tmpi += dim;
+    }
 }
 
 

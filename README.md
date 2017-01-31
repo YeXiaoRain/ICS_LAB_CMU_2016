@@ -17,7 +17,11 @@
 
 **Notes**: (a) Hardware only, (b) No dyn. storage alloc, (c) No dyn. linking, (d) No f.p.
 
-[Switch to solution](https://github.com/yexiaorain/ICS_LAB_CMU_2016/tree/finish) : `git checkout -b finish origin/finish`
+[Switch to default](https://github.com/YeXiaoRain/ICS_LAB_CMU_2016) : `git checkout default`
+
+相关
+ * [wdxtub's Blog](http://wdxtub.com/2016/04/16/thin-csapp-0/)
+ * [SJTU-SE](https://github.com/SJTU-SE/awesome-se)
 
 ---
 

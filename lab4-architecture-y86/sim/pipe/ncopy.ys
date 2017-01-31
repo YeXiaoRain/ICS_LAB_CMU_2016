@@ -20,25 +20,215 @@ ncopy:	pushl %ebp		# Save old frame pointer
 	mrmovl 12(%ebp),%ecx	# dst
 
 ##################################################################
-# You can modify this portion
-	# Loop header
-	xorl %eax,%eax		# count = 0;
-	andl %edx,%edx		# len <= 0?
-	jle Done		# if so, goto Done:
-
-Loop:	mrmovl (%ebx), %esi	# read val from src...
-	rmmovl %esi, (%ecx)	# ...and store it to dst
-	andl %esi, %esi		# val <= 0?
-	jle Npos		# if so, goto Npos:
-	irmovl $1, %edi
-	addl %edi, %eax		# count++
-Npos:	irmovl $1, %edi
-	subl %edi, %edx		# len--
-	irmovl $4, %edi
-	addl %edi, %ebx		# src++
-	addl %edi, %ecx		# dst++
-	andl %edx,%edx		# len > 0?
-	jg Loop			# if so, goto Loop:
+  rrmovl %edx, %eax     # count=len
+  iaddl $-16, %edx      # len-=16
+  jle Switch            # if len<=0, goto Switch
+# Loop Start
+Expand0:
+  mrmovl 0(%ebx), %esi  # read val from (src + 0)
+  mrmovl 4(%ebx), %edi  # read val from (src + 4)
+  rmmovl %esi, 0(%ecx)  # store it to (dst + 0)
+  rmmovl %edi, 4(%ecx)  # store it to (dst + 4)
+  andl %esi, %esi       # val > 0?
+  jg Expand1            # if so, goto Expand1;
+  iaddl $-1, %eax       # count--
+Expand1:
+  andl %edi, %edi       # val > 0?
+  jg Expand2            # if so, goto Expand2;
+  iaddl $-1, %eax       # count--
+Expand2:
+  mrmovl 8(%ebx), %esi  # read val from (src + 8)
+  mrmovl 12(%ebx), %edi # read val from (src + 12)
+  rmmovl %esi, 8(%ecx)  # store it to (dst + 8)
+  rmmovl %edi, 12(%ecx) # store it to (dst + 12)
+  andl %esi, %esi       # val > 0?
+  jg Expand3            # if so, goto Expand3;
+  iaddl $-1, %eax       # count--
+Expand3:
+  andl %edi, %edi       # val > 0?
+  jg Expand4            # if so, goto Expand4;
+  iaddl $-1, %eax       # count--
+Expand4:
+  mrmovl 16(%ebx), %esi # read val from (src + 16)
+  mrmovl 20(%ebx), %edi # read val from (src + 20)
+  rmmovl %esi, 16(%ecx) # store it to (dst + 16)
+  rmmovl %edi, 20(%ecx) # store it to (dst + 20)
+  andl %esi, %esi       # val > 0?
+  jg Expand5            # if so, goto Expand5;
+  iaddl $-1, %eax       # count--
+Expand5:
+  andl %edi, %edi       # val > 0?
+  jg Expand6            # if so, goto Expand6;
+  iaddl $-1, %eax       # count--
+Expand6:
+  mrmovl 24(%ebx), %esi # read val from (src + 24)
+  mrmovl 28(%ebx), %edi # read val from (src + 28)
+  rmmovl %esi, 24(%ecx) # store it to (dst + 24)
+  rmmovl %edi, 28(%ecx) # store it to (dst + 28)
+  andl %esi, %esi       # val > 0?
+  jg Expand7            # if so, goto Expand7;
+  iaddl $-1, %eax       # count--
+Expand7:
+  andl %edi, %edi       # val > 0?
+  jg Expand8            # if so, goto Expand8;
+  iaddl $-1, %eax       # count--
+Expand8:
+  mrmovl 32(%ebx), %esi # read val from (src + 32)
+  mrmovl 36(%ebx), %edi # read val from (src + 36)
+  rmmovl %esi, 32(%ecx) # store it to (dst + 32)
+  rmmovl %edi, 36(%ecx) # store it to (dst + 36)
+  andl %esi, %esi       # val > 0?
+  jg Expand9            # if so, goto Expand9;
+  iaddl $-1, %eax       # count--
+Expand9:
+  andl %edi, %edi       # val > 0?
+  jg Expand10           # if so, goto Expand10;
+  iaddl $-1, %eax       # count--
+Expand10:
+  mrmovl 40(%ebx), %esi # read val from (src + 40)
+  mrmovl 44(%ebx), %edi # read val from (src + 44)
+  rmmovl %esi, 40(%ecx) # store it to (dst + 40)
+  rmmovl %edi, 44(%ecx) # store it to (dst + 44)
+  andl %esi, %esi       # val > 0?
+  jg Expand11           # if so, goto Expand11;
+  iaddl $-1, %eax       # count--
+Expand11:
+  andl %edi, %edi       # val > 0?
+  jg Expand12           # if so, goto Expand12;
+  iaddl $-1, %eax       # count--
+Expand12:
+  mrmovl 48(%ebx), %esi # read val from (src + 48)
+  mrmovl 52(%ebx), %edi # read val from (src + 52)
+  rmmovl %esi, 48(%ecx) # store it to (dst + 48)
+  rmmovl %edi, 52(%ecx) # store it to (dst + 52)
+  andl %esi, %esi       # val > 0?
+  jg Expand13           # if so, goto Expand13;
+  iaddl $-1, %eax       # count--
+Expand13:
+  andl %edi, %edi       # val > 0?
+  jg Expand14           # if so, goto Expand14;
+  iaddl $-1, %eax       # count--
+Expand14:
+  mrmovl 56(%ebx), %esi # read val from (src + 56)
+  mrmovl 60(%ebx), %edi # read val from (src + 60)
+  rmmovl %esi, 56(%ecx) # store it to (dst + 56)
+  rmmovl %edi, 60(%ecx) # store it to (dst + 60)
+  andl %esi, %esi       # val > 0?
+  jg Expand15           # if so, goto Expand15;
+  iaddl $-1, %eax       # count--
+Expand15:
+  andl %edi, %edi       # val > 0?
+  jg Expand16           # if so, goto Expand16;
+  iaddl $-1, %eax       # count--
+Expand16:
+  iaddl $64, %ebx       # src+=16
+  iaddl $64, %ecx       # dst+=16
+  iaddl $-16, %edx      # len-=16
+  jg Expand0
+# Loop End
+Switch:
+  iaddl $16, %edx       # len+=16
+  addl %edx,%edx        # len*=4
+  addl %edx,%edx
+  mrmovl jmpTable(%edx), %edx    # jump position=4*len+jmpTable
+  pushl %edx            # goto jump position
+  ret
+case16:
+  mrmovl 60(%ebx), %esi # read val from (src + 60)
+  rmmovl %esi, 60(%ecx) # store it to (dst + 60)
+  andl %esi, %esi       # val > 0?
+  jg case15             # if so, goto case15;
+  iaddl $-1, %eax       # count--
+case15:
+  mrmovl 56(%ebx), %esi # read val from (src + 56)
+  rmmovl %esi, 56(%ecx) # store it to (dst + 56)
+  andl %esi, %esi       # val > 0?
+  jg case14             # if so, goto case14;
+  iaddl $-1, %eax       # count--
+case14:
+  mrmovl 52(%ebx), %esi # read val from (src + 52)
+  rmmovl %esi, 52(%ecx) # store it to (dst + 52)
+  andl %esi, %esi       # val > 0?
+  jg case13             # if so, goto case13;
+  iaddl $-1, %eax       # count--
+case13:
+  mrmovl 48(%ebx), %esi # read val from (src + 48)
+  rmmovl %esi, 48(%ecx) # store it to (dst + 48)
+  andl %esi, %esi       # val > 0?
+  jg case12             # if so, goto case12;
+  iaddl $-1, %eax       # count--
+case12:
+  mrmovl 44(%ebx), %esi # read val from (src + 44)
+  rmmovl %esi, 44(%ecx) # store it to (dst + 44)
+  andl %esi, %esi       # val > 0?
+  jg case11             # if so, goto case11;
+  iaddl $-1, %eax       # count--
+case11:
+  mrmovl 40(%ebx), %esi # read val from (src + 40)
+  rmmovl %esi, 40(%ecx) # store it to (dst + 40)
+  andl %esi, %esi       # val > 0?
+  jg case10             # if so, goto case10;
+  iaddl $-1, %eax       # count--
+case10:
+  mrmovl 36(%ebx), %esi # read val from (src + 36)
+  rmmovl %esi, 36(%ecx) # store it to (dst + 36)
+  andl %esi, %esi       # val > 0?
+  jg case9              # if so, goto case9;
+  iaddl $-1, %eax       # count--
+case9:
+  mrmovl 32(%ebx), %esi # read val from (src + 32)
+  rmmovl %esi, 32(%ecx) # store it to (dst + 32)
+  andl %esi, %esi       # val > 0?
+  jg case8              # if so, goto case8;
+  iaddl $-1, %eax       # count--
+case8:
+  mrmovl 28(%ebx), %esi # read val from (src + 28)
+  rmmovl %esi, 28(%ecx) # store it to (dst + 28)
+  andl %esi, %esi       # val > 0?
+  jg case7              # if so, goto case7;
+  iaddl $-1, %eax       # count--
+case7:
+  mrmovl 24(%ebx), %esi # read val from (src + 24)
+  rmmovl %esi, 24(%ecx) # store it to (dst + 24)
+  andl %esi, %esi       # val > 0?
+  jg case6              # if so, goto case6;
+  iaddl $-1, %eax       # count--
+case6:
+  mrmovl 20(%ebx), %esi # read val from (src + 20)
+  rmmovl %esi, 20(%ecx) # store it to (dst + 20)
+  andl %esi, %esi       # val > 0?
+  jg case5              # if so, goto case5;
+  iaddl $-1, %eax       # count--
+case5:
+  mrmovl 16(%ebx), %esi # read val from (src + 16)
+  rmmovl %esi, 16(%ecx) # store it to (dst + 16)
+  andl %esi, %esi       # val > 0?
+  jg case4              # if so, goto case4;
+  iaddl $-1, %eax       # count--
+case4:
+  mrmovl 12(%ebx), %esi # read val from (src + 12)
+  rmmovl %esi, 12(%ecx) # store it to (dst + 12)
+  andl %esi, %esi       # val > 0?
+  jg case3              # if so, goto case3;
+  iaddl $-1, %eax       # count--
+case3:
+  mrmovl 8(%ebx), %esi  # read val from (src + 8)
+  rmmovl %esi, 8(%ecx)  # store it to (dst + 8)
+  andl %esi, %esi       # val > 0?
+  jg case2              # if so, goto case2;
+  iaddl $-1, %eax       # count--
+case2:
+  mrmovl 4(%ebx), %esi  # read val from (src + 4)
+  rmmovl %esi, 4(%ecx)  # store it to (dst + 4)
+  andl %esi, %esi       # val > 0?
+  jg case1              # if so, goto case1;
+  iaddl $-1, %eax       # count--
+case1:
+  mrmovl 0(%ebx), %esi  # read val from (src + 0)
+  rmmovl %esi, 0(%ecx)  # store it to (dst + 0)
+  andl %esi, %esi       # val > 0?
+  jg Done               # if so, goto Done;
+  iaddl $-1, %eax       # count--
 ##################################################################
 # Do not modify the following section of code
 # Function epilogue.
@@ -50,6 +240,26 @@ Done:
 	popl %ebp
 	ret
 ##################################################################
+#jumptable
+  .align 4
+jmpTable:
+  .long Done
+  .long case1
+  .long case2
+  .long case3
+  .long case4
+  .long case5
+  .long case6
+  .long case7
+  .long case8
+  .long case9
+  .long case10
+  .long case11
+  .long case12
+  .long case13
+  .long case14
+  .long case15
+  .long case16
 # Keep the following label at the end of your function
 End:
 #/* $end ncopy-ys */

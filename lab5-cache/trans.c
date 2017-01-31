@@ -22,6 +22,115 @@ int is_transpose(int M, int N, int A[N][M], int B[M][N]);
 char transpose_submit_desc[] = "Transpose submission";
 void transpose_submit(int M, int N, int A[N][M], int B[M][N])
 {
+  int i,j;
+  int q,k;
+  int tmp;
+  int tmp1,tmp2,tmp3,tmp4;
+  if(M==32){//{{{
+    //12 * 16 = 192miss
+    // 287-192=95
+    for(q=0;q<4;q++)
+      for(k=0;k<4;k++)
+        if(q==k){
+          for(i=8*q;i<8*(q+1);i++){
+            for(j=8*k;j<8*(k+1);j++){
+              if(i==j)
+                continue;
+              else
+                B[j][i]=A[i][j];
+            }
+            B[i][i]=A[i][i];
+          }
+        }else{
+          for(i=8*q;i<8*(q+1);i++)
+            for(j=8*k;j<8*(k+1);j++)
+              B[j][i]=A[i][j];
+        }//}}}
+  }else if(M==64){//{{{
+    for(q=0;q<8;q++)
+      for(k=0;k<8;k++)
+        if(q==k){
+          for(i=8*q;i<8*q+4;i++){
+            for(j=8*k;j<8*k+4;j++)
+              if(!((i-j+4)%4)){
+                tmp=j;
+                continue;
+              }
+              else
+                B[j][i]=A[i][j];
+            B[tmp][i]=A[i][tmp];
+          }
+          for(i=8*q+4;i<8*q+8;i++){
+            for(j=8*k;j<8*k+4;j++)
+              if(!((i-j+4)%4)){
+                tmp=j;
+                continue;
+              }
+              else
+                B[j][i]=A[i][j];
+            B[tmp][i]=A[i][tmp];
+          }
+          for(i=8*q+4;i<8*q+8;i++){
+            for(j=8*k+4;j<8*k+8;j++)
+              if(!((i-j+4)%4)){
+                tmp=j;
+                continue;
+              }
+              else
+                B[j][i]=A[i][j];
+            B[tmp][i]=A[i][tmp];
+          }
+          for(i=8*q;i<8*q+4;i++){
+            for(j=8*k+4;j<8*k+8;j++)
+              if(!((i-j+4)%4)){
+                tmp=j;
+                continue;
+              }
+              else
+                B[j][i]=A[i][j];
+            B[tmp][i]=A[i][tmp];
+          }
+          /*
+             for(i=8*q;i<8*(q+1);i++){
+             for(j=8*k;j<8*(k+1);j++){
+             if(i==j)
+             continue;
+             else
+             B[j][i]=A[i][j];
+             }
+             B[i][i]=A[i][i];
+             }*/
+        }else{
+          for(i=8*q;i<8*q+4;i++)
+            for(j=8*k;j<8*k+4;j++)
+              B[j][i]=A[i][j];
+          for(i=8*q;i<8*q+4;i++)
+            for(j=8*k+4;j<8*k+8;j++)
+              B[j-4][i+4]=A[i][j];
+          for(j=8*k;j<8*k+4;j++){
+            tmp1=B[j][8*q+4];
+            tmp2=B[j][8*q+5];
+            tmp3=B[j][8*q+6];
+            tmp4=B[j][8*q+7];
+            for(i=8*q+4;i<8*q+8;i++)
+              B[j][i]=A[i][j];
+            B[j+4][8*q]=tmp1;
+            B[j+4][8*q+1]=tmp2;
+            B[j+4][8*q+2]=tmp3;
+            B[j+4][8*q+3]=tmp4;
+            for(i=8*q+4;i<8*q+8;i++)
+              B[j+4][i]=A[i][j+4];
+          }
+        }
+  }//}}}
+  else if(M==61){//{{{
+    for(q=0;q<4;q++)
+      for(k=0;k<4;k++)
+        for(i=17*q;i<17*(q+1) && i<67;i++)
+          for(j=17*k;j<17*(k+1) && j<61;j++)
+            B[j][i]=A[i][j];
+  }//}}}
+  return ;
 }
 
 /* 
