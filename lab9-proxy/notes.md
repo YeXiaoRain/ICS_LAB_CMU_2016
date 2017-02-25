@@ -91,9 +91,7 @@ Cromarmot: 62500
 
 开始我的抄书之旅? 发现我以前的代码都不能用了！？手上也没有**第三版**的书.
 
-找到一个影印的 11章在952页开始 之后以3e-pdf代指该书 [pdf指该lab的pdf]
-
-<iframe width='100%' height='600' class='preview-iframe' scrolling='no' frameborder='0' src='http://download.csdn.net/source/preview/9234961/33dc73067d7512a7d970cec5fe8870db' ></iframe>
+找到一个影印的 11章在952页开始 之后以[3e-pdf](http://download.csdn.net/source/preview/9234961/33dc73067d7512a7d970cec5fe8870db)代指该书 [pdf指该lab的pdf]
 
 找到一个[代码](https://github.com/Davon-Feng/CSAPP-Labs/tree/master/yzf-proxylab-handout-3e)
  * 本lab的代码为在代码上 加上 辅助我自己理解 的注释,以及部分代码修改,和修复了一些虽然能哪满分但依然存在的bug,见总结

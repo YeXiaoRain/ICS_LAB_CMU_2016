@@ -17,10 +17,13 @@
 
 **Notes**: (a) Hardware only, (b) No dyn. storage alloc, (c) No dyn. linking, (d) No f.p.
 
+过程见我的每一个文件夹里的notes.md
+
 [Switch to default](https://github.com/YeXiaoRain/ICS_LAB_CMU_2016) : `git checkout default`
 
 相关
  * [wdxtub's Blog](http://wdxtub.com/2016/04/16/thin-csapp-0/)
+ * [Davon-Feng/CSAPP-Labs](https://github.com/Davon-Feng/CSAPP-Labs)
  * [SJTU-SE](https://github.com/SJTU-SE/awesome-se)
 
 总览[或者见下方英文]
