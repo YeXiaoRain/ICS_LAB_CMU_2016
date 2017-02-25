@@ -32,7 +32,7 @@
   3. 当位移数大于数字长度时行为未知.
 
   使用 `./dlc -e bits.c` 测试合法性
-  使用 `make btest;./btest` 测试正确性
+  使用 `make btest && ./btest` 测试正确性
 
 ## Solution
 

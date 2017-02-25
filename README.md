@@ -23,6 +23,20 @@
  * [wdxtub's Blog](http://wdxtub.com/2016/04/16/thin-csapp-0/)
  * [SJTU-SE](https://github.com/SJTU-SE/awesome-se)
 
+总览[或者见下方英文]
+ * lab1 [C++ 的数据结构的计算机内部表示方式]
+ * lab2 [C++ 与汇编的转换 关系(变量 分支 switch 调用)]
+ * lab3 [C++ (32/64)使用函数 的堆/寄存器/汇编 理解overflow攻击RoB攻击]
+ * lab4 [汇编指令 在硬件上的执行方式 流水线 hazad解决, 根据流水线的执行方式 优化程序CPE]
+ * lab5 [cache 的映射机制 理解cache对性能的提升]
+ * lab6 [cache 的替换机制 并利用它来优化程序 减少miss]
+ * lab7 [模拟 shell 理解 fork 信号的发送和处理]
+ * lab8 [堆 内存动态分配 结构设计]
+ * lab9 [网络 网页访问 信号处理 线程同步异步]
+lab未涉及 但书上有[TODO整理中...]
+ * 浮点数表示细节
+ * link load
+
 ---
 
 ### [Data Lab](/lab1-data)

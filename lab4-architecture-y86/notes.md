@@ -51,7 +51,7 @@ cannot find `-lfl`,cannot find `bison`
 
     sudo apt-get install flex,bison
 
-执行`make clean;make`没有报错的话,说明相关依赖已经安装好,就可以开始做这个lab了
+执行`make clean && make`没有报错的话,说明相关依赖已经安装好,就可以开始做这个lab了
 
 ### Part A
 
@@ -91,7 +91,7 @@ Stack:
 
 然后翻译`sum_list`的代码即可
 
-验证:`./yas sum.ys ;./yis sum.yo`
+验证:`./yas sum.ys && ./yis sum.yo`
 
 如果输出中函数返回值`%eax`是`0xcba`则说明正确
 
@@ -113,7 +113,7 @@ Changes to memory:
 
 写`rsum.ys` 栈初始化和第一次传参和`sum`一样,这里是递归需要注意利用`pushl,popl`保存局部变量
 
-验证 `./yas rsum.ys ;./yis rsum.yo`关注`%eax`的值是否是`0xcba`
+验证 `./yas rsum.ys && ./yis rsum.yo`关注`%eax`的值是否是`0xcba`
 
 ---
 
@@ -121,7 +121,7 @@ Changes to memory:
 
 这里首先要用新的数据段,第二初次传参是三个参数,根据栈的压栈顺序应为`push len, push &dest, push &src`,当其它顺序的也能跑,但还请按照lab最开始的模仿IA32的要求
 
-验证 `./yas copy.ys ;./yis copy.yo`
+验证 `./yas copy.ys && ./yis copy.yo`
 
 关注`%eax`的值是否是`0xcba` 通过异或得到的
 
@@ -242,7 +242,7 @@ Program Counter Update
 测试 注：如果出现文件未找到，可能是之前没有在sim目录下make
 
 ```
-lab4-architecture-y86/sim/seq > make clean;make VERSION=full;cd ../ptest; make SIM=../seq/ssim TFLAGS=-il;cd ../seq;
+lab4-architecture-y86/sim/seq > make clean && make VERSION=full && cd ../ptest &&  make SIM=../seq/ssim TFLAGS=-il && cd ../seq;
 ./optest.pl -s ../seq/ssim -il
 Simulating with ../seq/ssim
   All 59 ISA Checks Succeed

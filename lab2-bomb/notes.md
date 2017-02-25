@@ -30,7 +30,7 @@ phase_i(input);
 phase_defused();
 ```
 
-也就是说相对于题目描述并没有多出什么信息;
+也就是说相对于题目描述并没有多出什么信息
 
 下面使用gdb时记得每次加上`b explode_bomb`断点
 

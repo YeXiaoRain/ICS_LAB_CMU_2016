@@ -72,7 +72,7 @@ addr = | tag |  index  | offset |
 
 具体以上实现见我的代码
 
-测试 `make clean;make;./test-csim` 27分则满了
+测试 `make clean && make && ./test-csim` 27分则满了
 ```
                         Your simulator     Reference simulator
 Points (s,E,b)    Hits  Misses  Evicts    Hits  Misses  Evicts

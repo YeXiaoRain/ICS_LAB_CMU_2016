@@ -233,7 +233,7 @@ struct sockaddr_storage
 测试
 
 ``` 
-> make;./driver.sh 
+> make && ./driver.sh 
 *** Basic ***
 Starting tiny on 3161
 Starting proxy on 21093
@@ -412,7 +412,7 @@ if(sizebuf < MAX_OBJECT_SIZE){
 测试
 
 ```
-> make;./driver.sh
+> make && ./driver.sh
 *** Cache ***
 Starting tiny on port 2544
 Starting proxy on port 29983
